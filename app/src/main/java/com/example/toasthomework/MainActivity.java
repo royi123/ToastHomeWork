@@ -1,6 +1,8 @@
 package com.example.toasthomework;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    public Button submit;
     public int attempts;
     public int randNum;
     public int input;
@@ -21,13 +24,21 @@ public class MainActivity extends AppCompatActivity {
     public EditText Uinput;
     public TextView msg;
     public boolean checkAns(int n){
+        boolean bool =false;
         if (n==randNum){
-            return true;
+            bool=true;
         }
-        if (n+1==randNum){
-            Toast oneAway=Toast.makeText(this,"a random nuber between 1 and 9 has been generated",Toast.LENGTH_LONG);
-            oneAway.show();
+        if (n>randNum){
+            Toast tooBig=Toast.makeText(this,"your number is too big",Toast.LENGTH_LONG);
+            tooBig.show();
+            bool=false;
         }
+        if (n<randNum){
+            Toast tooSmall=Toast.makeText(this,"your number is too small",Toast.LENGTH_LONG);
+            tooSmall.show();
+            bool=false;
+        }
+        return bool;
     }
 
     @Override
@@ -40,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        submit=(Button) findViewById(R.id.Submit);
         msg=(TextView) findViewById(R.id.msg);
         attemptsText=(TextView) findViewById(R.id.attempCount);
         Uinput=(EditText) findViewById(R.id.UserInput);
@@ -49,8 +61,23 @@ public class MainActivity extends AppCompatActivity {
         attemptsText.setText("attempts: "+attempts);
         Toast created=Toast.makeText(this,"a random nuber between 1 and 9 has been generated",Toast.LENGTH_LONG);
         created.show();
-        String str =Uinput.getText().toString();
-        input=Integer.parseInt(str);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str =Uinput.getText().toString();
+                input=Integer.parseInt(str);
+                if (checkAns(input)==true){
+                    msg.setText("You Won :D");
+
+                }
+                if (checkAns(input)==false){
+                    attempts--;
+                    attemptsText.setText("attempts: "+attempts);
+                }
+            }
+        });
+
 
 
         
